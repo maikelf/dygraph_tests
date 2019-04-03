@@ -6,13 +6,19 @@
     <script src="synchronizer.js"></script>
 </head>
 <body>
-<div id="graphdiv1" style="width:500px; height:300px;"></div>
-<div id="graphdiv2" style="width:500px; height:300px;"></div>
-
-<div style="margin-top: 30px;"">
-    <input type=checkbox id='sync_check' checked onChange='update()'><label>Graph Synchronize</label>
-</div>
-
+<h1>Example #1. Synchronized Graphs</h1>
+<div>
+    <div id="graphdiv1" style="width:500px; height:300px;"></div>
+    <div id="graphdiv2" style="width:500px; height:300px;"></div>
+    <div style="margin-top: 30px;"">
+        <input type=checkbox id='sync_check' checked onChange='update()'><label>Graph Synchronize</label>
+    </div>        
+</div>  
+<h1 style="margin-top: 30px">Exmaple #2 Set, Show and Hide Annotations</h1>
+<div>
+    <div id="graphdiv3" style="width:500px; height:300px;"></div>
+    <button type="button" onclick="showHideAnnotation('2007/01/22')">Show/Hide Annotation</button>        
+</div>  
 <script type="text/javascript">
   const gs = [];  
   var blockRedraw = false;
@@ -33,6 +39,14 @@
   20071219,1\n20071220,1\n20071221,0\n20071222,0\n20071223,0\n20071224,1\n20071225,0\n20071226,1\n20071227,0\n20071228,1\n
   20071229,1\n20071230,1\n20071231,1`;
   
+  const temperatureBinary = `Date,Cero,One\n20070101,0,1\n20070102,1,0\n20070103,1,0\n20070104,1,0\n20070105,1,0\n20070106,0,1\n20070107,1,0\n20070108,1,0\n
+  20070109,0,1\n20070110,0,1\n20070111,0,1\n20070112,0,1\n20070113,0,1\n20070114,0,1\n20070115,0,1\n20070116,0,1\n20070117,0,1\n20070118,0,1\n20070119,0,1\n
+  20070120,0,1\n20070121,1,0\n20070122,0,1\n20070123,0,1\n20070124,0,1\n20070125,0,1\n20070126,1,0\n20070127,1,0\n20070128,1,0\n20070129,1,0\n
+  20070130,1,0\n20070131,1,0\n20070201,1,0\n20070202,1,0\n20070203,0,1\n20070204,0,1\n20070205,1,0\n20070711,1,0\n20071207,1,0\n20071208,1,0\n
+  20071209,0,1\n20071210,0,1\n20071211,0,1\n20071212,0,1\n20071213,0,1\n20071214,0,1\n20071215,0,1\n20071216,1,0\n20071217,1,0\n20071218,1,0\n
+  20071219,1,0\n20071220,1,0\n20071221,0,1\n20071222,0,1\n20071223,0,1\n20071224,1,0\n20071225,0,1\n20071226,1,0\n20071227,0,1\n20071228,1,0\n
+  20071229,1,0\n20071230,1,0\n20071231,1,0`;
+
   var g1 = new Dygraph(
         document.getElementById("graphdiv1"),
         temperatures,
@@ -50,11 +64,67 @@
         {}
     );
 
+
+ var g3 = new Dygraph(
+        document.getElementById("graphdiv3"),
+        temperatureBinary,
+        {
+            series: {
+                  'Cero': {
+                    strokeWidth: 0.0,
+                    drawPoints: true,
+                    pointSize: 4,
+                    highlightCircleSize: 6
+                  },
+                  'One': {
+                    strokeWidth: 1.0,
+                    drawPoints: true,
+                    pointSize: 1.5
+                  }
+                }
+        }
+    ); 
+
   gs.push(g1);
   gs.push(g2);
 
   var sync = Dygraph.synchronize(gs);
   update();
+
+  var annotation = [{
+            series: "Cero",
+            x: "2007/01/22",
+            shortText: "L",
+            text: "Coldest Day"
+        }
+    ];
+
+  g3.ready(function() {
+    g3.setAnnotations(annotation);
+  });
+
+  g3.updateOptions( {
+    annotationClickHandler: function(annotation, point, dygraph, event) {
+      console.log(annotation, point, dygraph, event);
+    }
+  });
+
+  function showHideAnnotation(x) {
+    let q = annotation.findIndex(e => e.x === x);
+    if(q === -1) {
+        annotation.push(
+            {
+                series: "Cero",
+                x: x,
+                shortText: "L",
+                text: "Coldest Day"
+            }
+        );
+    } else {
+        annotation.splice(q, 1);
+    }
+    g3.setAnnotations(annotation);
+  } 
 
   function update() {
         var sync_check = document.getElementById('sync_check').checked;
