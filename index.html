@@ -5,24 +5,51 @@
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
     <script src="synchronizer.js"></script>
 </head>
+
+<style>
+  #graphicdiv5 .dygraph-legend {
+    background: #fff;
+    width: auto;
+    padding: 10px;
+    border-radius: 6px;
+    border: solid 1px #ddd;
+    line-height: 20px;
+  }
+</style>
+
 <body>
-<h1>Example #1. Synchronized Graphs</h1>
+
+<h1>Example #1. Synchronized Graphs (graph #1, graph #2)</h1>
 <div>
-    <div id="graphdiv1" style="width:500px; height:300px;"></div>
-    <div id="graphdiv2" style="width:500px; height:300px;"></div>
+    <h4>Graph #1</h4>
+    <div id="graphdiv1" style="width:100%; height:400px;"></div>
+    
+    <h4 style="margin-top: 20px;">Graph #2. Example #2. Launch event when click over point</h4>
+    <div id="graphdiv2" style="width:100%; height:400px;"></div>
     <div style="margin-top: 30px;"">
         <input type=checkbox id='sync_check' checked onChange='update()'><label>Graph Synchronize</label>
     </div>        
 </div>  
-<h1 style="margin-top: 30px">Exmaple #2 Set, Show and Hide Annotations</h1>
+
+<h1 style="margin-top: 30px">Exmaple #3 Set, Show and Hide Annotations</h1>
 <div>
-    <div id="graphdiv3" style="width:500px; height:300px;"></div>
+    <h4>Graph #3</h4>
+    <div id="graphdiv3" style="width:100%; height:400px;"></div>
     <button type="button" onclick="showHideAnnotation('2007/01/22')">Show/Hide Annotation</button>        
-</div> 
-<h1 style="margin-top: 30px">Exmaple #3 Scientific Notation</h1>
-<div>
-    <div id="graphicdiv4" style="width:500px; height:300px;"></div>
 </div>
+
+<h1 style="margin-top: 30px">Exmaple #4 Scientific Notation</h1>
+<div>
+    <h4>Graph #4</h4>
+    <div id="graphicdiv4" style="width:100%; height:400px;"></div>
+</div>
+
+<h1 style="margin-top: 30px">Exmaple #5 Pretty Legend</h1>
+<div>
+    <h4>Graph #5</h4>
+    <div id="graphicdiv5" style="width:100%; height:400px;"></div>
+</div>
+
 <script type="text/javascript">
   const gs = [];  
   var blockRedraw = false;
@@ -57,6 +84,9 @@
   11.0,5.07462187E8,5.0749725075377125E8\n12.0,5.07462686E8,5.0749664195970446E8\n13.0,5.07462399E8,5.074969165015413E8\n14.0,5.07462841E8,5.0749736543238837E8\n
   15.0,5.07462184E8,5.0749481556429964E8\n16.0,5.07462182E8,5.0749756452911836E8\n17.0,5.0746285E8,5.0749682167336446E8\n18.0,5.07462172E8,5.074974371023564E8\n
   19.0,5.07462689E8,5.0749633138825816E8`;
+
+  const pl = `Date,High,Low,Middle,Regression,Clustering,Class\n20070101,62,39,45,21,12,34\n20070102,62,44,45,21,12,34\n20070103,62,42,45,21,12,34\n20070104,57,45,45,21,12,34\n20070105,54,44,45,21,12,34\n20070106,55,36,45,21,12,34\n20070107,62,45,45,21,12,34\n20070108,66,48,45,21,12,34\n
+  20070109,63,39,45,21,12,34\n20070110,57,37,45,21,12,34\n20070111,50,37,45,21,12,34\n20070112,48,35,45,21,12,34`
 
   var g1 = new Dygraph(
         document.getElementById("graphdiv1"),
@@ -112,7 +142,20 @@
         }
               
       }
-  );  
+  );
+
+  var g5 = new Dygraph(
+      document.getElementById("graphicdiv5"),
+      pl,
+      {
+        legend: 'follow',
+        xlabel: 'Date',
+        ylabel: 'Temperature',
+        labelsSeparateLines: true            
+      }
+  );
+
+
 
   gs.push(g1);
   gs.push(g2);
